@@ -2,9 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import ChatWindow from './components/ChatWindow';
 import { Conversation, Message, Role, Source, Feedback } from './types';
-import { TaxResearchChat, classifyInquiry } from './services/geminiService';
+import { TaxResearchChat, classifyInquiry, GenerateContentResponse } from './services/openaiService';
 import { v4 as uuidv4 } from 'uuid';
-import { GenerateContentResponse } from '@google/genai';
 import { CONTEXT_TOKEN_LIMIT, TOKEN_WARNING_THRESHOLD, SYSTEM_INSTRUCTIONS } from './constants';
 
 const App: React.FC = () => {
@@ -166,10 +165,8 @@ const App: React.FC = () => {
         );
       }
 
-      const groundingChunks = lastChunk?.candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
-      const sources: Source[] = groundingChunks
-        .map((chunk: any) => chunk.web && { uri: chunk.web.uri, title: chunk.web.title })
-        .filter((source: any): source is Source => source && source.uri);
+      // Sources are now provided directly from the OpenAI service via Brave Search
+      const sources: Source[] = lastChunk?.sources ?? [];
 
         setConversations(prev =>
             prev.map(conv => {
