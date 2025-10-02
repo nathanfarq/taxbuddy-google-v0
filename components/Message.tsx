@@ -6,6 +6,7 @@ import ThumbsUpIcon from './icons/ThumbsUpIcon';
 import ThumbsDownIcon from './icons/ThumbsDownIcon';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import CitationSummary from './CitationSummary';
 
 interface MessageProps {
   message: MessageType;
@@ -69,10 +70,10 @@ const Message: React.FC<MessageProps> = ({ message, isLoading = false, onFeedbac
                         <ul className="list-none p-0 m-0 space-y-1.5 text-xs">
                             {message.sources.map((source, index) => (
                                 <li key={index} className="truncate">
-                                    <a 
-                                        href={source.uri} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer" 
+                                    <a
+                                        href={source.uri}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="text-indigo-600 hover:text-indigo-800 hover:underline transition-colors"
                                         title={source.title || source.uri}
                                     >
@@ -82,6 +83,12 @@ const Message: React.FC<MessageProps> = ({ message, isLoading = false, onFeedbac
                             ))}
                         </ul>
                     </div>
+                )}
+                {isAssistant && message.text && !isLoading && (
+                    <CitationSummary
+                        responseText={message.text}
+                        availableSources={message.sources || []}
+                    />
                 )}
                 {isAssistant && !isLoading && message.text && (
                      <div className="mt-3 -mb-1 flex items-center justify-end gap-1">
